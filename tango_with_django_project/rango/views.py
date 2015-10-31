@@ -1,5 +1,6 @@
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from rango.models import Category
 from rango.models import Page
 from rango.forms import CategoryForm
@@ -68,7 +69,7 @@ def add_page(request, category_name_slug):
             if cat:
                 page = form.save(commit=False)
                 page.category = cat
-                page.views  =0
+                page.views = 0
                 page.save()
 
                 return category(request, category_name_slug)
@@ -115,4 +116,25 @@ def register(request):
                   {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
 
 
+def user_login(request):
 
+    if request.method == 'POST':
+
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            if user.is_active:
+                login(request,user)
+                return HttpResponseRedirect('/rango/')
+            else:
+                return HttpResponse('Your account has been disabled.')
+
+        else:
+            print "Invalid login Details: {0}, {1} ".format(username, password)
+            return HttpResponse('Invalid login details supplied')
+
+    else:
+        return render(request,'rango/login.html', {})
