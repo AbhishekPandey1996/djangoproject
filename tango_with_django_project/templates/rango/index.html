@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>Rango Says..</h1>
+
     {% if categories %}
         <ul>
             {% for category in categories %}
@@ -23,6 +24,7 @@
     {% endif %}
 
     <a href="/rango/add_category/">Add a new Category</a><br/>
+    <a href="/rango/register/">Register here</a>
     <a href="/rango/about/">About</a><br />
 
     <img src="{% static "images/vendetta.jpg" %}" alt="Picture of Rango" height="600" width="1066" />
